@@ -18,14 +18,14 @@ public class ShopRepositoryTests {
 
         shopRepository.removeById(49);
 
-        Product[] exception = {product1, product2};
+        Product[] expected = {product1, product2};
         Product[] actual = shopRepository.findAll();
 
-        Assertions.assertArrayEquals(exception, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
-    public void shouldCatchException() {
+    public void shouldCatchNotFoundException() {
         ShopRepository shopRepository = new ShopRepository();
 
         Product product1 = new Product(1, "Колбаса", 1000);
@@ -38,6 +38,34 @@ public class ShopRepositoryTests {
 
         Assertions.assertThrows(NotFoundException.class, () -> {
             shopRepository.removeById(5000);
+        });
+    }
+
+    @Test
+    public void shouldAddElement() {
+        ShopRepository shopRepository = new ShopRepository();
+
+        Product product = new Product(12, "Куртка", 10000);
+
+        shopRepository.add(product);
+
+        Product[] expected = {product};
+        Product[] actual = shopRepository.findAll();
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldCatchAlreadyExistsException() {
+        ShopRepository shopRepository = new ShopRepository();
+
+        Product product1 = new Product(12, "Куртка", 10000);
+        Product product2 = new Product(12, "Носки", 500);
+
+        shopRepository.add(product1);
+
+        Assertions.assertThrows(AlreadyExistsException.class, () -> {
+            shopRepository.add(product2);
         });
     }
 }
