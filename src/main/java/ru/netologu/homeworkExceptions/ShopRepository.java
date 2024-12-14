@@ -13,6 +13,9 @@ public class ShopRepository {
     }
 
     public void add(Product product) {
+        if (findById(product.getId()) != null) {
+            throw new AlreadyExistsException("Элемент с ID: " + product.getId() + " - уже добавлен");
+        }
         products = addToArray(products, product);
     }
 
@@ -21,8 +24,8 @@ public class ShopRepository {
     }
 
     public void removeById(int id) {
-        if(findById(id) == null){
-            throw new NotFoundException("Элемент с ID " + id + "не найден");
+        if (findById(id) == null) {
+            throw new NotFoundException("Элемент с ID: " + id + " - не найден");
         }
         Product[] tmp = new Product[products.length - 1];
         int copyToIndex = 0;
